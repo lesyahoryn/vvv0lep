@@ -27,8 +27,8 @@ public:
     // If there are N events, and was asked to split 2 ways, then depending on job_index, it will run over first half or latter half
     int nsplit_jobs;
 
-    //default eft index 
-    int eft_idx; 
+    //default eft index
+    int eft_idx;
 
     // Job index (assuming nsplit_jobs is set, the job_index determine where to loop over)
     int job_index;
@@ -153,8 +153,8 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cout << "No EFT index set -- setting to 0 (SM)" << std::endl;
-        ana.eft_idx = 0;
+        std::cout << "No EFT index set -- setting to 12 (cW = 0.1 TeV^-2)" << std::endl;
+        ana.eft_idx = 12;
     }
 
     //_______________________________________________________________________________
@@ -427,8 +427,16 @@ int main(int argc, char** argv)
     float xsec = j["xsec"];
     float sum_genWeight = j["sum_genWeight"];
     TString process = j["process"];
-    int eft_idx = 0;
+    int sm_eft_idx = 0;
     int year = j["year"];
+
+    bool do_systematics = false;
+    //===============================================================================================================================================================
+    // Add systematics
+    // ana.cutflow.addWgtSyst("PileupUp", [&]() { return vvv.puWgtUp() / vvv.puWgt(); });
+    // ana.cutflow.addWgtSyst("PileupDn", [&]() { return vvv.puWgtDn() / vvv.puWgt(); });
+
+    std::vector<TString> regions = {"A", "B", "C", "D", "E", "F"};
 
     #include "lambda.h"
 
@@ -446,7 +454,7 @@ int main(int argc, char** argv)
                                return true;
                            }
                        },
-                       [&, is_data, is_sig, is_eft, eft_idx, lumi, xsec, sum_genWeight]()
+                       [&, ana, is_data, is_sig, is_eft, sm_eft_idx, lumi, xsec, sum_genWeight]()
                        {
                            if (is_data)
                            {
@@ -458,7 +466,7 @@ int main(int argc, char** argv)
                                if (is_eft)
                                {
                                    if (LHEReweightingWeight().size() != 0)
-                                       return LHEReweightingWeight()[eft_idx] * wgt;
+                                       return LHEReweightingWeight()[ana.eft_idx] * wgt;
                                    else
                                        return 0.f;
                                }
@@ -472,47 +480,53 @@ int main(int argc, char** argv)
     //===============================================================================================================================================================
     // One lepton region
     ana.cutflow.getCut("Base");
-    ana.cutflow.addCutToLastActiveCut("OL", [&]() { return is1Lep(); }, UNITY);
-    ana.cutflow.addCutToLastActiveCut("OL1FJ", [&]() { return NFJ() == 1; }, UNITY);
-    // True Fat-jet's (W fat-jets from top)
-    ana.cutflow.getCut("OL1FJ");
-    ana.cutflow.addCutToLastActiveCut("OLTB", [&]() { return NbTight() >= 1; }, UNITY);
-    ana.cutflow.getCut("OLTB");
-    ana.cutflow.addCutToLastActiveCut("OLElTB", [&]() { return abs(LepFlav()) == 11; }, UNITY);
-    ana.cutflow.getCut("OLTB");
-    ana.cutflow.addCutToLastActiveCut("OLMuTB", [&]() { return abs(LepFlav()) == 13; }, UNITY);
-    // Fake Fat-jet's
-    ana.cutflow.getCut("OL1FJ");
-    ana.cutflow.addCutToLastActiveCut("OLNB", [&]() { return NoORNbTight() == 0; }, UNITY);
-    ana.cutflow.getCut("OLNB");
-    ana.cutflow.addCutToLastActiveCut("OLElNB", [&]() { return abs(LepFlav()) == 11; }, UNITY);
-    ana.cutflow.getCut("OLNB");
-    ana.cutflow.addCutToLastActiveCut("OLMuNB", [&]() { return abs(LepFlav()) == 13; }, UNITY);
-    // For each regions add regions with pt bins and flavors
-    vector<TString> regions = {"OLTB", "OLElTB", "OLMuTB", "OLNB", "OLElNB", "OLMuNB"};
-    vector<float> ptbins = {200, 250, 300, 350, 400, 450, 500, 600, 800, 1000, 1300};
-    vector<TString> flavor_names = {"Top", "W", "QB", "Q", "B", "Other"};
-    for (unsigned int ibin = 0; ibin < ptbins.size(); ++ibin)
+
+    bool do_onelep = false;
+
+    if (do_onelep)
     {
-        int pt_lower_bound = ptbins[ibin];
-        int pt_upper_bound = ibin != ptbins.size() - 1 ? ptbins[ibin + 1] : 13600;
-        for (auto& region : regions)
+        ana.cutflow.addCutToLastActiveCut("OL", [&]() { return is1Lep(); }, UNITY);
+        ana.cutflow.addCutToLastActiveCut("OL1FJ", [&]() { return NFJ() == 1; }, UNITY);
+        // True Fat-jet's (W fat-jets from top)
+        ana.cutflow.getCut("OL1FJ");
+        ana.cutflow.addCutToLastActiveCut("OLTB", [&]() { return NbTight() >= 1; }, UNITY);
+        ana.cutflow.getCut("OLTB");
+        ana.cutflow.addCutToLastActiveCut("OLElTB", [&]() { return abs(LepFlav()) == 11; }, UNITY);
+        ana.cutflow.getCut("OLTB");
+        ana.cutflow.addCutToLastActiveCut("OLMuTB", [&]() { return abs(LepFlav()) == 13; }, UNITY);
+        // Fake Fat-jet's
+        ana.cutflow.getCut("OL1FJ");
+        ana.cutflow.addCutToLastActiveCut("OLNB", [&]() { return NoORNbTight() == 0; }, UNITY);
+        ana.cutflow.getCut("OLNB");
+        ana.cutflow.addCutToLastActiveCut("OLElNB", [&]() { return abs(LepFlav()) == 11; }, UNITY);
+        ana.cutflow.getCut("OLNB");
+        ana.cutflow.addCutToLastActiveCut("OLMuNB", [&]() { return abs(LepFlav()) == 13; }, UNITY);
+        // For each regions add regions with pt bins and flavors
+        vector<TString> regions = {"OLTB", "OLElTB", "OLMuTB", "OLNB", "OLElNB", "OLMuNB"};
+        vector<float> ptbins = {200, 250, 300, 350, 400, 450, 500, 600, 800, 1000, 1300};
+        vector<TString> flavor_names = {"Top", "W", "QB", "Q", "B", "Other"};
+        for (unsigned int ibin = 0; ibin < ptbins.size(); ++ibin)
         {
-            TString kinematic_bin_name = TString::Format("%sPtLo%dHi%d", region.Data(), pt_lower_bound, pt_upper_bound);
-            ana.cutflow.getCut(region);
-            ana.cutflow.addCutToLastActiveCut(
-                kinematic_bin_name,
-                [&, pt_lower_bound, pt_upper_bound]()
-                {
-                    float pt = FJ0().pt();
-                    return (pt > pt_lower_bound and pt <= pt_upper_bound);
-                }, UNITY);
-            // Split by flavors
-            for (unsigned int iflavor = 0; iflavor < flavor_names.size(); ++iflavor)
+            int pt_lower_bound = ptbins[ibin];
+            int pt_upper_bound = ibin != ptbins.size() - 1 ? ptbins[ibin + 1] : 13600;
+            for (auto& region : regions)
             {
-                ana.cutflow.getCut(kinematic_bin_name);
-                TString name = TString::Format("%s%s", kinematic_bin_name.Data(), flavor_names[iflavor].Data());
-                ana.cutflow.addCutToLastActiveCut(name, [&, iflavor]() { return fjcateg() == int(iflavor); }, UNITY);
+                TString kinematic_bin_name = TString::Format("%sPtLo%dHi%d", region.Data(), pt_lower_bound, pt_upper_bound);
+                ana.cutflow.getCut(region);
+                ana.cutflow.addCutToLastActiveCut(
+                    kinematic_bin_name,
+                    [&, pt_lower_bound, pt_upper_bound]()
+                    {
+                        float pt = FJ0().pt();
+                        return (pt > pt_lower_bound and pt <= pt_upper_bound);
+                    }, UNITY);
+                // Split by flavors
+                for (unsigned int iflavor = 0; iflavor < flavor_names.size(); ++iflavor)
+                {
+                    ana.cutflow.getCut(kinematic_bin_name);
+                    TString name = TString::Format("%s%s", kinematic_bin_name.Data(), flavor_names[iflavor].Data());
+                    ana.cutflow.addCutToLastActiveCut(name, [&, iflavor]() { return fjcateg() == int(iflavor); }, UNITY);
+                }
             }
         }
     }
@@ -526,98 +540,157 @@ int main(int argc, char** argv)
     // Zero lepton + two fat-jet region
     ana.cutflow.getCut("ZL");
     ana.cutflow.addCutToLastActiveCut("ZL2FJ", [&]() { return NFJ() == 2; }, UNITY);
-    ana.cutflow.addCutToLastActiveCut("ZL2FJPresel", [&]() { return HT() > 1100 and FJ0().pt() > 500.; }, [&, process]() { if (process.Contains("QCD")) return 2.05391728656f; else return 1.f; });
-    ana.cutflow.addCutToLastActiveCut("ZL2FJM20to150"  , [&]() { return FJ0().mass() > 20 and FJ1().mass() > 20 and FJ0().mass() < 150. and FJ1().mass() < 150.; }, UNITY);
-    ana.cutflow.addCutToLastActiveCut("ZL2FJNoB"  , [&]() { return NbMedium() == 0; }, UNITY);
-    
-    //signal region
-    ana.cutflow.addCutToLastActiveCut("ZL2FJA"    , [&]() { 
-        return (signalMSD(FJ0()) and signalMSD(FJ1()) and WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ); }, BLIND);
-    
-    //1st fatjet loose!tight, 2nd signal 
-    ana.cutflow.getCut("ZL2FJNoB");   
-    ana.cutflow.addCutToLastActiveCut("ZL2FJB"    , [&]() { 
-        return (   signalMSD(FJ0()) and signalMSD(FJ1()) and ( WMD_LOOSE(WMD0()) and !WMD_TIGHT(WMD0())) and WMD_TIGHT(WMD1()) ); }, UNITY);
 
-    //1st fatjet signal, 2nd low mSD 
-    ana.cutflow.getCut("ZL2FJNoB");   
-    ana.cutflow.addCutToLastActiveCut("ZL2FJC"    , [&]() { 
-        return (   signalMSD(FJ0()) and lowMSD(FJ1()) and WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ); }, UNITY);
-    
-    //1st fatjet loose!tight, 2nd low mSD 
-    ana.cutflow.getCut("ZL2FJNoB");   
-    ana.cutflow.addCutToLastActiveCut("ZL2FJD"    , [&]() { 
-        return (   signalMSD(FJ0()) and lowMSD(FJ1()) and ( WMD_LOOSE(WMD0()) and !WMD_TIGHT(WMD0()) ) and WMD_TIGHT(WMD1()) ); }, UNITY);
-
-    //1st fatjet signal, 2nd high mSD 
-    ana.cutflow.getCut("ZL2FJNoB");   
-    ana.cutflow.addCutToLastActiveCut("ZL2FJE"    , [&]() { 
-        return (   signalMSD(FJ0()) and highMSD(FJ1()) and WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ); }, UNITY);    
-
-    //1st fatjet loose!tight, 2nd high mSD 
-    ana.cutflow.getCut("ZL2FJNoB");   
-    ana.cutflow.addCutToLastActiveCut("ZL2FJF"    , [&]() { 
-        return (   signalMSD(FJ0()) and highMSD(FJ1()) and ( WMD_LOOSE(WMD0()) and !WMD_TIGHT(WMD0()) ) and WMD_TIGHT(WMD1()) ); }, UNITY);  
-
-    ana.cutflow.addCutToLastActiveCut("ZL3FJF", [&]() { return is_shell_3d() and vmd_reg_3d() != 8; }, UNITY);
-    for (unsigned int ieft = 0; ieft < 91; ++ieft)
+    std::vector<std::function<bool()>> cuts_2fj = 
     {
-        // The various EFT regions
-        ana.cutflow.getCut("ZL3FJA");
-        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL3FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[0]; else return 1.f; });
+        [&]() { return HT() > 1100; },
+        [&]() { return FJ0().pt() > 500.; },
+        [&]() { return FJ0().mass() < 150.; },
+        [&]() { return FJ1().mass() < 150.; },
+        [&]() { return NbMedium() == 0.; },
+        [&]() { return signalMSD(FJ0()); },
+        [&]() { return WMD_TIGHT(WMD1()); },
+        [&]() { return WMD_LOOSE(WMD0()); },
+        // [&]() { return MET().pt() < 400.; },
+    };
+
+    std::vector<std::function<bool()>> cuts_2fj_lowmet = 
+    {
+        [&]() { return HT() > 1100; },
+        [&]() { return FJ0().pt() > 500.; },
+        [&]() { return FJ0().mass() < 150.; },
+        [&]() { return FJ1().mass() < 150.; },
+        [&]() { return NbMedium() == 0.; },
+        [&]() { return signalMSD(FJ0()); },
+        [&]() { return WMD_TIGHT(WMD1()); },
+        [&]() { return WMD_LOOSE(WMD0()); },
+        [&]() { return MET().pt() < 400.; },
+    };
+
+    std::vector<std::function<bool()>> cuts_2fj_highmet = 
+    {
+        [&]() { return HT() > 1100; },
+        [&]() { return FJ0().pt() > 500.; },
+        [&]() { return FJ0().mass() < 150.; },
+        [&]() { return FJ1().mass() < 150.; },
+        [&]() { return signalMSD(FJ0()); },
+        [&]() { return WMD_TIGHT(WMD1()); },
+        [&]() { return WMD_LOOSE(WMD0()); },
+        [&]() { return MET().pt() >= 400.; },
+    };
+
+    std::vector<std::function<bool()>> abcdef_2fj = 
+    {
+        [&]() { return signalMSD(FJ0()) and signalMSD(FJ1()) and WMD_TIGHT(WMD0())                           and WMD_TIGHT(WMD1()) ; },
+        [&]() { return signalMSD(FJ0()) and signalMSD(FJ1()) and WMD_LOOSE(WMD0()) and not WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ; },
+        [&]() { return signalMSD(FJ0()) and lowMSD(FJ1())    and WMD_TIGHT(WMD0())                           and WMD_TIGHT(WMD1()) ; },
+        [&]() { return signalMSD(FJ0()) and lowMSD(FJ1())    and WMD_LOOSE(WMD0()) and not WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ; },
+        [&]() { return signalMSD(FJ0()) and highMSD(FJ1())   and WMD_TIGHT(WMD0())                           and WMD_TIGHT(WMD1()) ; },
+        [&]() { return signalMSD(FJ0()) and highMSD(FJ1())   and WMD_LOOSE(WMD0()) and not WMD_TIGHT(WMD0()) and WMD_TIGHT(WMD1()) ; },
+    };
+
+    std::vector<std::function<float()>> abcdef_wgt_2fj = 
+    {
+        BLIND,
+        UNITY,
+        UNITY,
+        UNITY,
+        UNITY,
+        UNITY,
+    };
+
+    ana.cutflow.getCut("ZL2FJ");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJPresel", [&, cuts_2fj]() { for (auto& cut : cuts_2fj) { if (not cut()) return false; } return true; }, UNITY);
+    ana.cutflow.getCut("ZL2FJ");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJLMETPresel", [&, cuts_2fj_lowmet]() { for (auto& cut : cuts_2fj_lowmet) { if (not cut()) return false; } return true; }, UNITY);
+    ana.cutflow.getCut("ZL2FJ");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJHMETPresel", [&, cuts_2fj_highmet]() { for (auto& cut : cuts_2fj_highmet) { if (not cut()) return false; } return true; }, UNITY);
+
+    for (unsigned int ireg = 0; ireg < regions.size(); ++ireg)
+    {
+        ana.cutflow.getCut("ZL2FJPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJ%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJLMETPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJHMETPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
     }
-
-
 
     //===============================================================================================================================================================
     // Zero lepton + three fat-jet region
     ana.cutflow.getCut("ZL");
     ana.cutflow.addCutToLastActiveCut("ZL3FJ", [&]() { return NFJ() >= 3; }, UNITY);
-    ana.cutflow.addCutToLastActiveCut("ZL3FJPresel", [&]() { return SumPtFJ() > 1250 and FJ0().pt() > 500.; }, [&, process]() { if (process.Contains("QCD")) return 2.05391728656f; else return 1.f; });
-    ana.cutflow.addCutToLastActiveCut("ZL3FJM150"  , [&]() { return FJ0().mass() < 150. and FJ1().mass() < 150. and FJ2().mass() < 150.; }, UNITY);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJA", [&]() { return is_inside_3d() and vmd_reg_3d() == 8; }, BLIND);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJB", [&]() { return is_outside_3d() and vmd_reg_3d() == 8; }, UNITY);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJC", [&]() { return is_inside_3d() and vmd_reg_3d() != 8; }, UNITY);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJD", [&]() { return is_outside_3d() and vmd_reg_3d() != 8; }, UNITY);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJE", [&]() { return is_shell_3d() and vmd_reg_3d() == 8; }, UNITY);
-    ana.cutflow.getCut("ZL3FJM150");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJF", [&]() { return is_shell_3d() and vmd_reg_3d() != 8; }, UNITY);
-    for (unsigned int ieft = 0; ieft < 91; ++ieft)
-    {
-        // The various EFT regions
-        ana.cutflow.getCut("ZL3FJA");
-        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL3FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[eft_idx]; else return 1.f; });
-        
-        ana.cutflow.getCut("ZL2FJA");
-        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[eft_idx]; else return 1.f; });
-    
-    }
-    // Dim8 (87 / 135 = FT0=1)
-    ana.cutflow.getCut("ZL3FJA");
-    ana.cutflow.addCutToLastActiveCut("ZL3FJAFT0", UNITY, [&, is_eft, process]()
-                                      {
-                                          if (is_eft)
-                                          {
-                                              if (process.Contains("WWW_"))
-                                              {
-                                                  return LHEReweightingWeight()[91] / LHEReweightingWeight()[eft_idx];
-                                              }
-                                              else
-                                              {
-                                                  return LHEReweightingWeight()[139] / LHEReweightingWeight()[eft_idx];
-                                              }
-                                          }
-                                          else
-                                          {
-                                              return 1.f;
-                                          }
-                                      });
 
+    std::vector<std::function<bool()>> cuts_3fj = 
+    {
+        [&]() { return SumPtFJ() > 1250; },
+        [&]() { return FJ0().pt() > 500.; },
+        [&]() { return FJ0().mass() < 150.; },
+        [&]() { return FJ1().mass() < 150.; },
+        [&]() { return FJ2().mass() < 150.; },
+    };
+
+    std::vector<std::function<bool()>> abcdef_3fj = 
+    {
+        [&]() { return is_inside_3d()  and vmd_reg_3d() == 8; },
+        [&]() { return is_inside_3d()  and vmd_reg_3d() != 8; },
+        [&]() { return is_outside_3d() and vmd_reg_3d() == 8; },
+        [&]() { return is_outside_3d() and vmd_reg_3d() != 8; },
+        [&]() { return is_shell_3d()   and vmd_reg_3d() == 8; },
+        [&]() { return is_shell_3d()   and vmd_reg_3d() != 8; },
+    };
+
+    std::vector<std::function<float()>> abcdef_wgt_3fj = 
+    {
+        BLIND,
+        UNITY,
+        UNITY,
+        UNITY,
+        UNITY,
+        UNITY,
+    };
+
+    ana.cutflow.addCutToLastActiveCut("ZL3FJPresel", [&, cuts_3fj]() { for (auto& cut : cuts_3fj) { if (not cut()) return false; } return true; }, UNITY);
+
+    for (unsigned int ireg = 0; ireg < regions.size(); ++ireg)
+    {
+        ana.cutflow.getCut("ZL3FJPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL3FJ%s", regions[ireg].Data()), abcdef_3fj[ireg], abcdef_wgt_3fj[ireg]);
+    }
+
+    ana.cutflow.getCut("ZL");
+    ana.cutflow.addCutToLastActiveCut("ZL3FJTop",
+                                      [&]()
+                                      {
+                                          return is_atleast_onetop_3d()
+                                              and NFJ() >= 3
+                                              and SumPtFJ() > 1250
+                                              and FJ0().pt() > 500.
+                                              and NoORNbMedium() >= 2
+                                              and FJ2().mass() > 80.
+                                              and is_outside_3d()
+                                              and vmd_reg_3d() == 8
+                                              ;
+                                      },
+                                      UNITY);
+
+    // The various EFT regions
+    if (is_sig)
+    {
+        for (unsigned ieft = 0; ieft < 91; ++ieft)
+        {
+            ana.cutflow.getCut("ZL3FJA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL3FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+            ana.cutflow.getCut("ZL2FJA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+            ana.cutflow.getCut("ZL2FJLMETA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+            ana.cutflow.getCut("ZL2FJHMETA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+        }
+    }
+
+    //===============================================================================================================================================================
     // Print cut structure
     ana.cutflow.printCuts();
 
@@ -642,6 +715,9 @@ int main(int argc, char** argv)
     histograms_FJ1.addHistogram("NQGen1" , 7   , 0       , 7      , [&]() { return NQGen1(); } );
     histograms_FJ1.addHistogram("NBGen1" , 7   , 0       , 7      , [&]() { return NBGen1(); } );
     histograms_FJ1.addHistogram("NLGen1" , 7   , 0       , 7      , [&]() { return NLGen1(); } );
+    histograms_FJ1.addHistogram("Pt01"   , 180 , 0       , 4500   , [&]() { return (FJ0() + FJ1()).pt(); } );
+    histograms_FJ1.addHistogram("Mass01" , 180 , 0       , 4500   , [&]() { return (FJ0() + FJ1()).mass(); } );
+    histograms_FJ1.addHistogram("DPhi01" , 180 , 0       , 3.1416 , [&]() { return fabs(RooUtil::Calc::DeltaPhi(FJ0(), FJ1())); } );
     RooUtil::Histograms histograms_FJ2;
     histograms_FJ2.addHistogram("Pt2"    , 180 , 0       , 1500   , [&]() { return FJ2().pt(); } );
     histograms_FJ2.addHistogram("Eta2"   , 180 , -5      , 5      , [&]() { return FJ2().eta(); } );
@@ -651,9 +727,15 @@ int main(int argc, char** argv)
     histograms_FJ2.addHistogram("NQGen2" , 7   , 0       , 7      , [&]() { return NQGen2(); } );
     histograms_FJ2.addHistogram("NBGen2" , 7   , 0       , 7      , [&]() { return NBGen2(); } );
     histograms_FJ2.addHistogram("NLGen2" , 7   , 0       , 7      , [&]() { return NLGen2(); } );
-    histograms_FJ2.add2DHistogram("VMD2" , 180 , 0       , 1,       , [&]() { return NLGen2(); } );
+    histograms_FJ2.addHistogram("PtVVV"  , 180 , 0       , 2500   , [&]() { return (FJ0() + FJ1() + FJ2()).pt(); } );
+    histograms_FJ2.addHistogram("Mass02" , 180 , 0       , 2500   , [&]() { return (FJ0() + FJ2()).mass(); } );
+    histograms_FJ2.addHistogram("Mass12" , 180 , 0       , 2500   , [&]() { return (FJ1() + FJ2()).mass(); } );
+    histograms_FJ2.addHistogram("DPhi02" , 180 , 0       , 3.1416 , [&]() { return fabs(RooUtil::Calc::DeltaPhi(FJ0(), FJ2())); } );
+    histograms_FJ2.addHistogram("DPhi12" , 180 , 0       , 3.1416 , [&]() { return fabs(RooUtil::Calc::DeltaPhi(FJ1(), FJ2())); } );
     RooUtil::Histograms histograms_event;
     histograms_event.addHistogram("Yield"        , 1   , 0 , 1    , [&]() { return 0.f; } );
+    histograms_event.addHistogram("NFJ"          , 7   , 0 , 7    , [&]() { return NFJ(); } );
+    histograms_event.addHistogram("NJ"           , 7   , 0 , 7    , [&]() { return NJ(); } );
     histograms_event.addHistogram("NbLoose"      , 7   , 0 , 7    , [&]() { return NbLoose(); } );
     histograms_event.addHistogram("NbMedium"     , 7   , 0 , 7    , [&]() { return NbMedium(); } );
     histograms_event.addHistogram("NbTight"      , 7   , 0 , 7    , [&]() { return NbTight(); } );
@@ -665,7 +747,15 @@ int main(int argc, char** argv)
     histograms_event.addHistogram("HTJ"          , 180 , 0 , 5000 , [&]() { return HTJ(); } );
     histograms_event.addHistogram("SumPtFJ"      , 180 , 0 , 5000 , [&]() { return SumPtFJ(); } );
     histograms_event.addHistogram("SumPtJ"       , 180 , 0 , 5000 , [&]() { return SumPtJ(); } );
-    histograms_event.addHistogram("MET"          , 180 , 0 , 1000 , [&]() { return MET().pt(); } );
+    histograms_event.addHistogram("MVVX"         , 180 , 0 , 5000 , [&]() { return MVVX(); } );
+    histograms_event.addHistogram("MET"          , 180 , 0 , 3000 , [&]() { return MET().pt(); } );
+    histograms_event.addHistogram("SRMET"        , {0., 400., 600., 800., 1000., 1500.}, [&]() { if (MET().pt() < 1500.) return MET().pt(); else return 1499.f; } );
+    histograms_event.addHistogram("HTJFit"       , 180 , 0 , 9000 , [&]() { return HTJ(); } );
+    histograms_event.addHistogram("HTJFit2"      , {0., 1000., 1100., 1200., 1300., 1400., 1500., 1600., 1700., 1800., 1900., 2000., 2100., 2200., 2300., 2400., 2500., 2600., 2700., 2800., 2900., 3000., 3250., 3500., 3750., 4000., 5000., 7000.} , [&]() { return HTJ(); } );
+    histograms_event.addHistogram("SumPtFJFit"   , 180 , 0 , 9000 , [&]() { return SumPtFJ(); } );
+    histograms_event.addHistogram("SumPtFJFit2"  , {0., 1000., 1100., 1200., 1300., 1400., 1500., 1600., 1700., 1800., 1900., 2000., 2100., 2200., 2300., 2400., 2500., 2600., 2700., 2800., 2900., 3000., 3250., 3500., 3750., 4000., 5000., 7000.} , [&]() { return SumPtFJ(); } );
+    histograms_event.addHistogram("HTFJFit"      , 180 , 0 , 9000 , [&]() { return HTFJ(); } );
+    histograms_event.addHistogram("HTFJFit2"     , {0., 1000., 1100., 1200., 1300., 1400., 1500., 1600., 1700., 1800., 1900., 2000., 2100., 2200., 2300., 2400., 2500., 2600., 2700., 2800., 2900., 3000., 3250., 3500., 3750., 4000., 5000., 7000.} , [&]() { return HTFJ(); } );
     RooUtil::Histograms histograms_onelep;
     histograms_onelep.addHistogram("LPt"     , 180 , 0       , 1000   , [&]() { return Lep().pt(); } );
     histograms_onelep.addHistogram("LEta"    , 180 , -5      , 5      , [&]() { return Lep().eta(); } );
@@ -674,31 +764,61 @@ int main(int argc, char** argv)
     RooUtil::Histograms histograms_FJ0_SF;
     histograms_FJ0_SF.addHistogram("SFVMD0" , 10000  , 0     , 1     , [&]() { return VMD0(); } );
     RooUtil::Histograms histograms_3FJ_SR;
-    histograms_3FJ_SR.addHistogram("SR1SumPtFJ", {1250, 1500, 1750, 2000, 2500, 3000, 4000} , [&]() { if (SumPtFJ() < 3500) return SumPtFJ(); else return 3500.f; } );
-    histograms_3FJ_SR.addHistogram("SR2SumPtFJ", {1250, 1500, 1750, 2000, 3000} , [&]() { if (SumPtFJ() < 2500) return SumPtFJ(); else return 2500.f; } );
+    histograms_3FJ_SR.addHistogram("SR1SumPtFJ", {1250, 1500, 1750, 2000, 2250, 2500, 4000} , [&]() { if (SumPtFJ() < 4000) return SumPtFJ(); else return 3999.f; } );
+    histograms_3FJ_SR.addHistogram("SR2SumPtFJ", {1250, 1500, 1750, 2000, 3000} , [&]() { if (SumPtFJ() < 2500) return SumPtFJ(); else return 2499.f; } );
     RooUtil::Histograms histograms_2FJ_SR;
-    histograms_2FJ_SR.addHistogram("HT_binned", {1100,2500,4000,140000} , [&]() { return HT(); } );
+    histograms_2FJ_SR.addHistogram("HTJ_binned", {1100, 2500, 4000, 6000} , [&]() { if (HTJ() < 6000) return HTJ(); else return 5999.f; } );
+    histograms_2FJ_SR.addHistogram("SR1HTFJ", {1100, 1500, 2000, 2500, 3000} , [&]() { if (HT() < 3000) return HT(); else return 2999.f; } );
+    histograms_2FJ_SR.addHistogram("SR2HTFJ", {1100, 1500, 2000, 2500, 3000, 3500, 4000, 5000} , [&]() { if (HT() < 5000) return HT(); else return 4999.f; } );
+    histograms_2FJ_SR.addHistogram("SR1SumPtFJ", {1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3500, 4000, 5000, 6000} , [&]() { if (SumPtFJ() < 6000) return SumPtFJ(); else return 5999.f; } );
+    histograms_2FJ_SR.addHistogram("SR2SumPtFJ", {1250, 1500, 1750, 2000, 2500, 3000, 4000} , [&]() { if (SumPtFJ() < 4000) return SumPtFJ(); else return 3999.f; } );
+
+    RooUtil::Histograms histograms_2FJ_Cutflow;
+    histograms_2FJ_Cutflow.addVecHistogram("Cutflow2FJ", cuts_2fj.size() + 1, 0, cuts_2fj.size() + 1, [&, cuts_2fj]() { std::vector<float> rtn; rtn.push_back(0); bool failed = false; int icut = 1; for (auto& cut : cuts_2fj) { if (cut()) { rtn.push_back(icut); } else { break; } icut += 1; } return rtn; } );
+    histograms_2FJ_Cutflow.addVecHistogram("Cutflow2FJLMET", cuts_2fj_lowmet.size() + 1, 0, cuts_2fj_lowmet.size() + 1, [&, cuts_2fj_lowmet]() { std::vector<float> rtn; rtn.push_back(0); bool failed = false; int icut = 1; for (auto& cut : cuts_2fj_lowmet) { if (cut()) { rtn.push_back(icut); } else { break; } icut += 1; } return rtn; } );
+    histograms_2FJ_Cutflow.addVecHistogram("Cutflow2FJHMET", cuts_2fj_highmet.size() + 1, 0, cuts_2fj_highmet.size() + 1, [&, cuts_2fj_highmet]() { std::vector<float> rtn; rtn.push_back(0); bool failed = false; int icut = 1; for (auto& cut : cuts_2fj_highmet) { if (cut()) { rtn.push_back(icut); } else { break; } icut += 1; } return rtn; } );
+
+    RooUtil::Histograms histograms_3FJ_Cutflow;
+    histograms_3FJ_Cutflow.addVecHistogram("Cutflow3FJ", cuts_3fj.size() + 1, 0, cuts_3fj.size() + 1, [&, cuts_3fj]() { std::vector<float> rtn; rtn.push_back(0); bool failed = false; int icut = 1; for (auto& cut : cuts_3fj) { if (cut()) { rtn.push_back(icut); } else { break; } icut += 1; } return rtn; } );
+
     // Book cutflows
     // ana.cutflow.bookCutflows(); // This slow things down so try to keep it commented out and use only when necessary
 
     // Book Histograms
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "OL");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0_SF, "OL");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "OL");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_onelep, "OL");
+    if (do_onelep)
+    {
+        ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "OL");
+        ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0_SF, "OL");
+        ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "OL");
+        ana.cutflow.bookHistogramsForCutAndBelow(histograms_onelep, "OL");
+    }
 
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJ");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJLMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJLMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJLMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJLMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJHMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJHMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJHMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJHMETPresel");
+    ana.cutflow.bookHistogramsForCut(histograms_2FJ_Cutflow, "ZL2FJ");
 
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL3FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL3FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ2, "ZL3FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL3FJPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_3FJ_SR, "ZL3FJPresel");
+    ana.cutflow.bookHistogramsForCut(histograms_3FJ_Cutflow, "ZL3FJ");
 
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL3FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL3FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ2, "ZL3FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL3FJ");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_3FJ_SR, "ZL3FJ");
-
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL3FJTop");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL3FJTop");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ2, "ZL3FJTop");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL3FJTop");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_3FJ_SR, "ZL3FJTop");
 
     // Looping input file
     while (ana.looper.nextEvent())
@@ -722,3 +842,84 @@ int main(int argc, char** argv)
     // The below can be sometimes crucial
     delete ana.output_tfile;
 }
+    ////signal region
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJA", [&]() { return is_inside_2d() and vmd_reg_2d() == 4; }, BLIND);
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJB", [&]() { return is_outside_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJC", [&]() { return is_inside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJD", [&]() { return is_outside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJE", [&]() { return is_shell_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJF", [&]() { return is_shell_2d() and vmd_reg_2d() != 4; }, UNITY);
+
+    ////signal region
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJLowMET" , [&]() { return MET().pt() <= 400.; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJALowMET", [&]() { return is_inside_2d() and vmd_reg_2d() == 4; }, BLIND);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJBLowMET", [&]() { return is_outside_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJCLowMET", [&]() { return is_inside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJDLowMET", [&]() { return is_outside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJELowMET", [&]() { return is_shell_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJLowMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJFLowMET", [&]() { return is_shell_2d() and vmd_reg_2d() != 4; }, UNITY);
+
+    ////signal region
+    //ana.cutflow.getCut("ZL2FJNoB");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJHighMET" , [&]() { return MET().pt() > 400. and NoORNbTight() == 0; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJAHighMET", [&]() { return is_inside_2d() and vmd_reg_2d() == 4; }, BLIND);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJBHighMET", [&]() { return is_outside_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJCHighMET", [&]() { return is_inside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJDHighMET", [&]() { return is_outside_2d() and vmd_reg_2d() != 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJEHighMET", [&]() { return is_shell_2d() and vmd_reg_2d() == 4; }, UNITY);
+    //ana.cutflow.getCut("ZL2FJHighMET");
+    //ana.cutflow.addCutToLastActiveCut("ZL2FJFHighMET", [&]() { return is_shell_2d() and vmd_reg_2d() != 4; }, UNITY);
+
+    // // Now that the cuts are defined
+    // // Declaring systematics for this channel
+    // //                       VVVVVV  == The "ZL3FJ" prefixes are gonna get triggered to keep track of Systematics
+    // if (do_systematics)
+    // {
+
+    //     std::vector<TString> systs = {"JES", "JER"};
+    //     std::vector<TString> vars = {"Up", "Dn"};
+
+    //     for (auto& syst : systs)
+    //     {
+    //         for (auto& var : vars)
+    //         {
+    //             TString systvar = TString::Format("%s%s", syst.Data(), var.Data());
+    //             ana.cutflow.addCutSyst(systvar, {"ZL3FJ"});
+    //             ana.cutflow.setCutSyst("ZL3FJ", systvar,
+    //                                           [&, systvar]()
+    //                                           {
+    //                                               return NFJ(systvar) >= 3 and
+    //                                                   SumPtFJ(systvar) > 1250 and
+    //                                                   FJ0(systvar).pt() > 500. and
+    //                                                   FJ0(systvar).mass() < 150. and
+    //                                                   FJ1(systvar).mass() < 150. and
+    //                                                   FJ2(systvar).mass() < 150.;
+    //                                           }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJA", systvar, [&, systvar]() { return is_inside_3d(systvar) and vmd_reg_3d(systvar) == 8; }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJB", systvar, [&, systvar]() { return is_outside_3d(systvar) and vmd_reg_3d(systvar) == 8; }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJC", systvar, [&, systvar]() { return is_inside_3d(systvar) and vmd_reg_3d(systvar) != 8; }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJD", systvar, [&, systvar]() { return is_outside_3d(systvar) and vmd_reg_3d(systvar) != 8; }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJE", systvar, [&, systvar]() { return is_shell_3d(systvar) and vmd_reg_3d(systvar) == 8; }, UNITY);
+    //             ana.cutflow.setCutSyst("ZL3FJF", systvar, [&, systvar]() { return is_shell_3d(systvar) and vmd_reg_3d(systvar) != 8; }, UNITY);
+    //         }
+    //     }
+    // }
+

@@ -1,0 +1,39 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 4554000,
+    "sum_genWeight": 260326.40572816133,
+    "nfiles": 9,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_8.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_6.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_5.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_7.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_1.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_4.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_3.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_9.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8/output_2.root"
+    ],
+    "nevents": [
+        66588,
+        31558,
+        2717,
+        63313,
+        5096,
+        20876,
+        91538,
+        52965,
+        27826
+    ],
+    "is_sig": 1,
+    "is_bkg": 0,
+    "is_data": 0,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM_VVV0TreeV8",
+    "name": "WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17_ext1-v1_NANOAODSIM",
+    "process": "WZZ_TuneCP5_13TeV-amcatnlo-pythia8",
+    "xsec": 0.05565,
+    "lumi": 16.81,
+    "year": 2016,
+    "output_dir": "output/VVV0TreeV8/2016/WZZ_TuneCP5_13TeV-amcatnlo-pythia8"
+}

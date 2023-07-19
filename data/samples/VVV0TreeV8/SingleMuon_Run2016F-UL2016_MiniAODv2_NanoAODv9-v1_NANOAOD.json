@@ -1,0 +1,31 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 8024195,
+    "sum_genWeight": 0,
+    "nfiles": 5,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_5.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_1.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_4.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_3.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_2.root"
+    ],
+    "nevents": [
+        9373,
+        13754,
+        7077,
+        3077,
+        9747
+    ],
+    "is_sig": 0,
+    "is_bkg": 0,
+    "is_data": 1,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8",
+    "name": "SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD",
+    "process": "SingleMuon_Run2016F",
+    "xsec": 1,
+    "lumi": 1,
+    "year": 2016,
+    "output_dir": "output/VVV0TreeV8/2016/SingleMuon_Run2016F"
+}

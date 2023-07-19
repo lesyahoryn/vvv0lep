@@ -1,0 +1,33 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 3526000,
+    "sum_genWeight": 3526000.0,
+    "nfiles": 6,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_6.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_5.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_1.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_4.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_3.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8/output_2.root"
+    ],
+    "nevents": [
+        1273,
+        832,
+        4685,
+        3493,
+        1009,
+        1896
+    ],
+    "is_sig": 0,
+    "is_bkg": 1,
+    "is_data": 0,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_VVV0TreeV8",
+    "name": "ZZ_TuneCP5_13TeV-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM",
+    "process": "ZZ_TuneCP5_13TeV-pythia8",
+    "xsec": 12.14,
+    "lumi": 59.83,
+    "year": 2018,
+    "output_dir": "output/VVV0TreeV8/2018/ZZ_TuneCP5_13TeV-pythia8"
+}

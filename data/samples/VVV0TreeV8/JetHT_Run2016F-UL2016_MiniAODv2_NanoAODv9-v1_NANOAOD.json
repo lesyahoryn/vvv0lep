@@ -1,0 +1,31 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 6613811,
+    "sum_genWeight": 0,
+    "nfiles": 5,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_5.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_1.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_4.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_3.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8/output_2.root"
+    ],
+    "nevents": [
+        453048,
+        358777,
+        285247,
+        368986,
+        379182
+    ],
+    "is_sig": 0,
+    "is_bkg": 0,
+    "is_data": 1,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV8",
+    "name": "JetHT_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD",
+    "process": "JetHT_Run2016F",
+    "xsec": 1,
+    "lumi": 1,
+    "year": 2016,
+    "output_dir": "output/VVV0TreeV8/2016/JetHT_Run2016F"
+}

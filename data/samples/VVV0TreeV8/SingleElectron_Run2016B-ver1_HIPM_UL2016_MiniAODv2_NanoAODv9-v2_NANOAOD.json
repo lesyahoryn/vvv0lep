@@ -1,0 +1,23 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 1422819,
+    "sum_genWeight": 0,
+    "nfiles": 1,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleElectron_Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_VVV0TreeV8/output_1.root"
+    ],
+    "nevents": [
+        0
+    ],
+    "is_sig": 0,
+    "is_bkg": 0,
+    "is_data": 1,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/SingleElectron_Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_VVV0TreeV8",
+    "name": "SingleElectron_Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD",
+    "process": "SingleElectron_Run2016B",
+    "xsec": 1,
+    "lumi": 1,
+    "year": 2006,
+    "output_dir": "output/VVV0TreeV8/2006/SingleElectron_Run2016B"
+}

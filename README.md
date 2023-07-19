@@ -6,15 +6,6 @@
     cd rooutil/ && make -j && cd ../ # do this once
     make -j
 
-## Two fat-jet
+## Running
 
-    ./run.py
-    ./merge.py
-    ./plot_2fj.py
-
-## Three fat-jet
-
-    ./run.py
-    ./merge.py
-    ./abcd_3fj.py
-    ./plot_3fj.py
+    sh arun.sh

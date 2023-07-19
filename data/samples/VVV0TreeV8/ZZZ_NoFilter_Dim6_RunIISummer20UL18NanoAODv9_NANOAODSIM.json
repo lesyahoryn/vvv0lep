@@ -1,0 +1,23 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 973000,
+    "sum_genWeight": 677403.653206706,
+    "nfiles": 1,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZZ_NoFilter_Dim6_RunIISummer20UL18NanoAODv9_NANOAODSIM_VVV0TreeV8/output_1.root"
+    ],
+    "nevents": [
+        39190
+    ],
+    "is_sig": 1,
+    "is_bkg": 0,
+    "is_data": 0,
+    "is_eft": 1,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/ZZZ_NoFilter_Dim6_RunIISummer20UL18NanoAODv9_NANOAODSIM_VVV0TreeV8",
+    "name": "ZZZ_NoFilter_Dim6_RunIISummer20UL18NanoAODv9_NANOAODSIM",
+    "process": "ZZZ_NoFilter_Dim6",
+    "xsec": 0.01398,
+    "lumi": 59.83,
+    "year": 2018,
+    "output_dir": "output/VVV0TreeV8/2018/ZZZ_NoFilter_Dim6"
+}

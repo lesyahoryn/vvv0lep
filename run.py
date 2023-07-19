@@ -3,8 +3,13 @@
 import os
 import glob
 import json
-from systematics import systs
 import plot_config as c
+import sys
+import socket
+
+run_test = False
+if len(sys.argv) > 1:
+    run_test = True
 
 
 eft_dim8 = {
@@ -54,7 +59,12 @@ for jobconfig in jobconfigs:
     process = j["process"]
     output_dir = j["output_dir"]
 
+    if run_test:
+        if "Dim" not in process:
+            continue
+
     for job_index in range(len(cs)):
+<<<<<<< HEAD
         for syst in systs:
             output_name = f"output_{job_index}.root"
             output_fullpath = f"{output_dir}/{syst}/{output_name}"
@@ -73,7 +83,18 @@ for jobconfig in jobconfigs:
                     subprocess.call(["mv", out_name, args.outPath])
 
 
+=======
+        output_name = f"output_{job_index}.root"
+        output_fullpath = f"{output_dir}/{output_name}"
+        os.system(f"mkdir -p {output_dir}/")
+        output_log_fullpath = output_fullpath.replace(".root", ".log")
+        inputs = ",".join(cs[job_index])
+        jobs.write(f"./doAnalysis --json {jobconfig} -i {inputs} -o {output_fullpath} -t t > {output_log_fullpath} 2>&1\n")
+>>>>>>> 2f970f7c0e01a3a640658d78da98641e3f5daa14
 
 jobs.close()
 
-os.system("xargs.sh .jobs.txt")
+if "uaf-2" in socket.gethostname():
+    os.system("xargs.sh .jobs.txt")
+else:
+    os.system("xargs.sh .jobs.txt")

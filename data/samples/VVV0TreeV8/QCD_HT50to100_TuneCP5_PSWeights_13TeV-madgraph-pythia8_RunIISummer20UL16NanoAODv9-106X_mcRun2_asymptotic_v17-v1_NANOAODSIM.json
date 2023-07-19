@@ -1,0 +1,43 @@
+{
+    "tag": "VVV0TreeV8",
+    "noriginalevents": 11197186,
+    "sum_genWeight": 11197186.0,
+    "nfiles": 11,
+    "files": [
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_8.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_6.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_11.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_5.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_7.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_10.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_1.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_4.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_3.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_9.root",
+        "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8/output_2.root"
+    ],
+    "nevents": [
+        2,
+        4,
+        0,
+        4,
+        1,
+        0,
+        2,
+        3,
+        5,
+        1,
+        0
+    ],
+    "is_sig": 0,
+    "is_bkg": 1,
+    "is_data": 0,
+    "is_eft": 0,
+    "dir": "/ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV8/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_VVV0TreeV8",
+    "name": "QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM",
+    "process": "QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8",
+    "xsec": 187300000,
+    "lumi": 16.81,
+    "year": 2016,
+    "output_dir": "output/VVV0TreeV8/2016/QCD_HT50to100_TuneCP5_PSWeights_13TeV-madgraph-pythia8"
+}

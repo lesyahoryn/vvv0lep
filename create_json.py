@@ -4,9 +4,14 @@ import glob
 import ROOT as r
 import os
 import json
+import socket
 
-tag = "VVV0TreeV7"
-sample_dirs = glob.glob(f"/ceph/cms/store/user/phchang/VVV0LepAnalysis/{tag}/*_{tag}")
+if "uaf-2" in socket.gethostname():
+    tag = "VVV0TreeV10_3FJ"
+    sample_dirs = glob.glob(f"/data/userdata/phchang/VVV0LepAnalysis/{tag}/*_{tag}")
+else:
+    tag = "VVV0TreeV8"
+    sample_dirs = glob.glob(f"/ceph/cms/store/user/phchang/VVV0LepAnalysis/{tag}/*_{tag}")
 os.system(f"mkdir -p data/samples/{tag}")
 
 xsec_json_file = open("data/MCxsec.json")

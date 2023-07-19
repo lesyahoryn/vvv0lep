@@ -108,23 +108,25 @@ wgt_syst = ["prefireWgt",
 # "trigWgtDn",
 ]
 
-syst_template = lambda VAR: f"""auto {VAR} = [&]()
+syst_template = lambda VAR: f"""auto {VAR} = [&](TString syst_name="Nominal")
 {{
-    if (ana.syst_name.EqualTo("JESUp"))
+    if (syst_name.EqualTo("Nominal"))
+        return vvv.{VAR}();
+    else if (syst_name.EqualTo("JESUp"))
         return vvv.{VAR}JESUp();
-    else if (ana.syst_name.EqualTo("JESDn"))
+    else if (syst_name.EqualTo("JESDn"))
         return vvv.{VAR}JESDn();
-    else if (ana.syst_name.EqualTo("JERUp"))
+    else if (syst_name.EqualTo("JERUp"))
         return vvv.{VAR}JERUp();
-    else if (ana.syst_name.EqualTo("JERDn"))
+    else if (syst_name.EqualTo("JERDn"))
         return vvv.{VAR}JERDn();
-    else if (ana.syst_name.EqualTo("JMSUp"))
+    else if (syst_name.EqualTo("JMSUp"))
         return vvv.{VAR}JMSUp();
-    else if (ana.syst_name.EqualTo("JMSDn"))
+    else if (syst_name.EqualTo("JMSDn"))
         return vvv.{VAR}JMSDn();
-    else if (ana.syst_name.EqualTo("JMRUp"))
+    else if (syst_name.EqualTo("JMRUp"))
         return vvv.{VAR}JMRUp();
-    else if (ana.syst_name.EqualTo("JMRDn"))
+    else if (syst_name.EqualTo("JMRDn"))
         return vvv.{VAR}JMRDn();
     else
         return vvv.{VAR}();

@@ -1,27 +1,41 @@
-lumi_value = 59.83
-tag = "VVV0TreeV6"
-year = "Run2"
-mdir = lambda syst: f"output/{tag}/{year}/merged/{syst}"
+import socket
 
-ddfnames = lambda syst: [
-        f"{mdir(syst)}/diboson.root",
-        f"{mdir(syst)}/QCD.root",
-        f"{mdir(syst)}/ttbar.root",
-        f"{mdir(syst)}/w.root",
-        f"{mdir(syst)}/z.root",
-        f"{mdir(syst)}/ttv.root",
-        f"{mdir(syst)}/onetop.root",
+if "uaf-2" in socket.gethostname():
+    tag = "VVV0TreeV10_3FJ"
+else:
+    tag = "VVV0TreeV7"
+year = "Run2"
+if year == "Run2":
+    lumi_value = 137.64
+elif year == "2006":
+    lumi_value = 19.52
+elif year == "2016":
+    lumi_value = 16.81
+elif year == "2017":
+    lumi_value = 41.48
+elif year == "2018":
+    lumi_value = 59.83
+mdir = f"output/{tag}/{year}/merged"
+
+ddfnames = [
+        f"{mdir}/diboson.root",
+        f"{mdir}/QCD.root",
+        f"{mdir}/ttbar.root",
+        f"{mdir}/w.root",
+        f"{mdir}/z.root",
+        f"{mdir}/ttv.root",
+        f"{mdir}/onetop.root",
         ]
 
 # background samples
-fnames = lambda syst: [
-        f"{mdir(syst)}/diboson.root",
-        f"{mdir(syst)}/qcd.root",
-        f"{mdir(syst)}/ttbar.root",
-        f"{mdir(syst)}/w.root",
-        f"{mdir(syst)}/z.root",
-        f"{mdir(syst)}/ttv.root",
-        f"{mdir(syst)}/onetop.root",
+fnames = [
+        f"{mdir}/diboson.root",
+        f"{mdir}/qcd.root",
+        f"{mdir}/ttbar.root",
+        f"{mdir}/w.root",
+        f"{mdir}/z.root",
+        f"{mdir}/ttv.root",
+        f"{mdir}/onetop.root",
         ]
 
 # legend
@@ -47,12 +61,12 @@ ddlegend_labels = [
             ]
 
 # signal names
-sig_fnames_dim8 = lambda syst: [
-            f"{mdir(syst)}/vvvdim8.root",
-            f"{mdir(syst)}/wwwdim8.root",
-            f"{mdir(syst)}/wwzdim8.root",
-            f"{mdir(syst)}/wzzdim8.root",
-            f"{mdir(syst)}/zzzdim8.root",
+sig_fnames_dim8 = [
+            f"{mdir}/vvvdim8.root",
+            f"{mdir}/wwwdim8.root",
+            f"{mdir}/wwzdim8.root",
+            f"{mdir}/wzzdim8.root",
+            f"{mdir}/zzzdim8.root",
             ]
 
 signal_labels_dim8 = [
@@ -64,20 +78,20 @@ signal_labels_dim8 = [
             ]
 
 # signal names
-sig_fnames_dim6 = lambda syst: [
-            f"{mdir(syst)}/vvvdim6.root",
-            f"{mdir(syst)}/wwwdim6.root",
-            f"{mdir(syst)}/wwzdim6.root",
-            f"{mdir(syst)}/wzzdim6.root",
-            f"{mdir(syst)}/zzzdim6.root",
+sig_fnames_dim6 = [
+            f"{mdir}/vvvdim6.root",
+            # f"{mdir}/wwwdim6.root",
+            # f"{mdir}/wwzdim6.root",
+            # f"{mdir}/wzzdim6.root",
+            # f"{mdir}/zzzdim6.root",
             ]
 
 signal_labels_dim6 = [
             "VVV D6",
-            "WWW D6",
-            "WWZ D6",
-            "WZZ D6",
-            "ZZZ D6",
+            # "WWW D6",
+            # "WWZ D6",
+            # "WZZ D6",
+            # "ZZZ D6",
             ]
 
 usercolors = [
@@ -104,7 +118,7 @@ extraoptions = {
             "nbins"            : 60,
             # "autobin"          : True,
             "print_yield"      : True,
-            "yield_prec"       : 3,
+            "yield_prec"       : 10,
             "yaxis_log"        : False,
             "legend_scalex"    : 2,
             "legend_ncolumns"  : 3,

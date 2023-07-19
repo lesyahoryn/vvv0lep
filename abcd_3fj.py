@@ -5,7 +5,7 @@ import sys
 from systematics import systs
 import plot_config as c
 
-hist_names = ["SR1SumPtFJ", "SR2SumPtFJ"]
+hist_names = ["SR1SumPtFJ", "SR2SumPtFJ", "VMD0", "VMD1", "VMD2", "Mass0", "Mass1", "Mass2", "Yield", "MVVX", "NbLoose", "NbMedium", "NbTight", "NoORNbLoose", "NoORNbMedium", "NoORNbTight", "SumPtFJ", "Mass01", "Mass02", "Mass12", "DPhi01", "DPhi02", "DPhi12", "Pt0", "Pt1", "Pt2", "MVVX", "MET", "HT"]
 
 for syst in systs:
     for year in [2006, 2016, 2017, 2018, "Run2"]:

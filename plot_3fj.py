@@ -16,6 +16,7 @@ for sig in ["dim6"]:
             "SR3SumPtFJ"  : {"xaxis_label" : "H_{T,Fat-Jet} [GeV]"    , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
             "SR2SumPtFJ"  : {"xaxis_label" : "H_{T,Fat-Jet} [GeV]"    , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
             "SR1SumPtFJ"  : {"xaxis_label" : "H_{T,Fat-Jet} [GeV]"    , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
+            "SumPtFJFit"  : {"xaxis_label" : "H_{T,Fat-Jet} [GeV]"    , "xaxis_ndivisions" : 505, "nbins": 60, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
             "HT_binned"   : {"xaxis_label" : "H_{T} [GeV]"            , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
             "HTJ_binned"  : {"xaxis_label" : "H_{T} [GeV]"            , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
             "HT"          : {"xaxis_label" : "H_{T} [GeV]"            , "xaxis_ndivisions" : 505, "nbins": 20, "signal_scale": signal_scale, "yaxis_log": True , "divide_by_bin_width": False},
@@ -73,6 +74,8 @@ for sig in ["dim6"]:
 
     ## MC Out-of-the-box
     c.extraoptions["yaxis_log"] = False
+
+    ## MC out-of-the-box
     p.dump_plot(
             fnames = c.fnames,
             legend_labels = c.legend_labels,
@@ -90,7 +93,9 @@ for sig in ["dim6"]:
     ## Data-Driven histograms (there are only a few)
     histograms = [
             "ZL3FJA__SR1SumPtFJ",
+            "ZL3FJA__SumPtFJFit",
             "ZL3FJE__SR1SumPtFJ",
+            "ZL3FJE__SumPtFJFit",
             "ZL2FJA__HTJ_binned",
             "ZL2FJE__HTJ_binned",
             "ZL2FJLMETA__SR2HTFJ",
@@ -116,38 +121,28 @@ for sig in ["dim6"]:
             histxaxislabeloptions = histxaxislabeloptions,
             )
 
-    # cut_regions = ["ZL3FJA", "ZL3FJE", "ZL3FJAEFTIDX16", "ZL3FJAEFTIDX12"]
-    # filter_patterns = []
-    # for hist_name in histxaxislabeloptions.keys():
-    #     # if hist_name not in ["SR2SumPtFJ", "SR1SumPtFJ"]:
-    #     #     continue
-    #     for cut_region in cut_regions:
-    #         filter_patterns.append(f"{cut_region}__{hist_name}")
-    # filter_pattern = ",".join(filter_patterns)
+    ## Data-Driven Fitted histograms
+    histograms = [
+            "ZL3FJA__SR1SumPtFJ",
+            "ZL3FJE__SR1SumPtFJ",
+            ]
+    filter_patterns = []
+    for hist in histograms:
+            filter_patterns.append(f"{hist}")
+    filter_pattern = ",".join(filter_patterns)
 
-    # cut_regions = ["ZL2FJAHighMETEFTIDX12", "ZL2FJBHighMET", "ZL2FJCHighMET", "ZL2FJDHighMET"]
-    # filter_patterns = []
-    # for cut_region in cut_regions:
-    #     for hist_name in histxaxislabeloptions.keys():
-    #         filter_patterns.append(f"{cut_region}__{hist_name}")
-    #     filter_patterns.append(f"{cut_region}_cutflow")
-    #     filter_patterns.append(f"{cut_region}_rawcutflow")
-    # filter_pattern = ",".join(filter_patterns)
-
-    # ## MC Out-of-the-box
-    # c.extraoptions["yaxis_log"] = False
-    # p.dump_plot(
-    #         fnames = c.ddfnames,
-    #         legend_labels = c.legend_labels,
-    #         sig_fnames = c.sig_fnames_dim8 if sig == "dim8" else c.sig_fnames_dim6,
-    #         signal_labels = c.signal_labels_dim8 if sig == "dim8" else c.signal_labels_dim6,
-    #         data_fname = data_fname,
-    #         usercolors = c.usercolors,
-    #         filter_pattern = filter_pattern,
-    #         dirname = f"plots/ZL2FJ/{c.tag}/{sig}/abcd",
-    #         dogrep = False,
-    #         extraoptions = c.extraoptions,
-    #         histxaxislabeloptions = histxaxislabeloptions,
-    #         # _plotter=p.plot_cut_scan,
-    #         )
+    ## Data Driven
+    p.dump_plot(
+            fnames = c.ddfnames_fit,
+            legend_labels = c.ddlegend_labels,
+            sig_fnames = c.sig_fnames_dim8 if sig == "dim8" else c.sig_fnames_dim6,
+            signal_labels = c.signal_labels_dim8 if sig == "dim8" else c.signal_labels_dim6,
+            data_fname = data_fname,
+            usercolors = c.ddusercolors,
+            filter_pattern = filter_pattern,
+            dirname = f"plots/ZL/{c.tag}/{sig}/fit",
+            dogrep = False,
+            extraoptions = c.extraoptions,
+            histxaxislabeloptions = histxaxislabeloptions,
+            )
 

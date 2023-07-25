@@ -17,6 +17,16 @@ elif year == "2018":
     lumi_value = 59.83
 mdir = f"output/{tag}/{year}/merged"
 
+ddfnames_fit = [
+        f"{mdir}/diboson.root",
+        f"{mdir}/QCDFIT.root",
+        f"{mdir}/ttbar.root",
+        f"{mdir}/w.root",
+        f"{mdir}/z.root",
+        f"{mdir}/ttv.root",
+        f"{mdir}/onetop.root",
+        ]
+
 ddfnames = [
         f"{mdir}/diboson.root",
         f"{mdir}/QCD.root",

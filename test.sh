@@ -1,0 +1,1 @@
+./doAnalysis --json data/samples/VVV0TreeV7/JetHT_Run2017E-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD.json -i /ceph/cms/store/user/phchang/VVV0LepAnalysis/VVV0TreeV7/JetHT_Run2017E-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_VVV0TreeV7/output_56.root -o output/VVV0TreeV7/2017/JetHT_Run2017E/output_3.root -t t

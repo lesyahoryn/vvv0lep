@@ -64,33 +64,12 @@ for jobconfig in jobconfigs:
             continue
 
     for job_index in range(len(cs)):
-<<<<<<< HEAD
-        for syst in systs:
-            output_name = f"output_{job_index}.root"
-            output_fullpath = f"{output_dir}/{syst}/{output_name}"
-            os.system(f"mkdir -p {output_dir}/{syst}")
-            output_log_fullpath = output_fullpath.replace(".root", ".log")
-            inputs = ",".join(cs[job_index])
-            if out_name.strip(".root") not in eft_to_run:
-                print out_name
-                jobs.write(f"./doAnalysis --json {jobconfig} -i {inputs} -o {output_fullpath} -t t -s {syst} > {output_log_fullpath} 2>&1\n")
-            else:
-                for idx in eft_to_run[out_name.strip(".root")]:
-                    out_name = f.split("/")[-1]
-                    out_name = out_name.strip(".root") + "_" + eft_to_run[out_name.strip(".root")][idx] + ".root"
-                    print out_name
-                    subprocess.call(["./doVVVAnalysis", "--input", args.inPath+f, "--tree", "t", "--mode", "8", "-V", "--output", out_name, "-e", idx] )
-                    subprocess.call(["mv", out_name, args.outPath])
-
-
-=======
         output_name = f"output_{job_index}.root"
         output_fullpath = f"{output_dir}/{output_name}"
         os.system(f"mkdir -p {output_dir}/")
         output_log_fullpath = output_fullpath.replace(".root", ".log")
         inputs = ",".join(cs[job_index])
         jobs.write(f"./doAnalysis --json {jobconfig} -i {inputs} -o {output_fullpath} -t t > {output_log_fullpath} 2>&1\n")
->>>>>>> 2f970f7c0e01a3a640658d78da98641e3f5daa14
 
 jobs.close()
 

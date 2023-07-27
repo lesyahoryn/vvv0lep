@@ -547,7 +547,6 @@ int main(int argc, char** argv)
         [&]() { return FJ0().pt() > 500.; },
         [&]() { return FJ0().mass() < 150.; },
         [&]() { return FJ1().mass() < 150.; },
-        [&]() { return NbMedium() == 0.; },
         [&]() { return signalMSD(FJ0()); },
         [&]() { return WMD_TIGHT(WMD1()); },
         [&]() { return WMD_LOOSE(WMD0()); },
@@ -560,7 +559,6 @@ int main(int argc, char** argv)
         [&]() { return FJ0().pt() > 500.; },
         [&]() { return FJ0().mass() < 150.; },
         [&]() { return FJ1().mass() < 150.; },
-        [&]() { return NbMedium() == 0.; },
         [&]() { return signalMSD(FJ0()); },
         [&]() { return WMD_TIGHT(WMD1()); },
         [&]() { return WMD_LOOSE(WMD0()); },
@@ -602,18 +600,51 @@ int main(int argc, char** argv)
     ana.cutflow.getCut("ZL2FJ");
     ana.cutflow.addCutToLastActiveCut("ZL2FJPresel", [&, cuts_2fj]() { for (auto& cut : cuts_2fj) { if (not cut()) return false; } return true; }, UNITY);
     ana.cutflow.getCut("ZL2FJ");
-    ana.cutflow.addCutToLastActiveCut("ZL2FJLMETPresel", [&, cuts_2fj_lowmet]() { for (auto& cut : cuts_2fj_lowmet) { if (not cut()) return false; } return true; }, UNITY);
+    ana.cutflow.addCutToLastActiveCut("ZL2FJLowMETPresel", [&, cuts_2fj_lowmet]() { for (auto& cut : cuts_2fj_lowmet) { if (not cut()) return false; } return true; }, UNITY);
     ana.cutflow.getCut("ZL2FJ");
-    ana.cutflow.addCutToLastActiveCut("ZL2FJHMETPresel", [&, cuts_2fj_highmet]() { for (auto& cut : cuts_2fj_highmet) { if (not cut()) return false; } return true; }, UNITY);
+    ana.cutflow.addCutToLastActiveCut("ZL2FJHighMETPresel", [&, cuts_2fj_highmet]() { for (auto& cut : cuts_2fj_highmet) { if (not cut()) return false; } return true; }, UNITY);
+
+    ana.cutflow.getCut("ZL2FJPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJPresel_withB", [&]() { if (NbMedium() > 0) return true; return false;}, UNITY);
+    ana.cutflow.getCut("ZL2FJPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJPresel_noB", [&]() { if (NbMedium() == 0) return true; return false;}, UNITY);
+
+    ana.cutflow.getCut("ZL2FJLowMETPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJLowMETPresel_withB", [&]() { if (NbMedium() > 0) return true; return false;}, UNITY);
+    ana.cutflow.getCut("ZL2FJLowMETPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJLowMETPresel_noB", [&]() { if (NbMedium() == 0) return true; return false;}, UNITY);
+
+    ana.cutflow.getCut("ZL2FJHighMETPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJHighMETPresel_withB", [&]() { if (NbMedium() > 0) return true; return false;}, UNITY);
+    ana.cutflow.getCut("ZL2FJHighMETPresel");
+    ana.cutflow.addCutToLastActiveCut("ZL2FJHighMETPresel_noB", [&]() { if (NbMedium() == 0) return true; return false;}, UNITY);
+
 
     for (unsigned int ireg = 0; ireg < regions.size(); ++ireg)
     {
+        std::cout << "region is " << regions[ireg].Data() << std::endl;
         ana.cutflow.getCut("ZL2FJPresel");
         ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJ%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
-        ana.cutflow.getCut("ZL2FJLMETPresel");
-        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
-        ana.cutflow.getCut("ZL2FJHMETPresel");
-        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJLowMETPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLowMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJHighMETPresel");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHighMET%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+
+        ana.cutflow.getCut("ZL2FJPresel_withB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJ_withB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJLowMETPresel_withB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLowMET_withB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJHighMETPresel_withB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHighMET_withB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+
+        ana.cutflow.getCut("ZL2FJPresel_noB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJ_noB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJLowMETPresel_noB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLowMET_noB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+        ana.cutflow.getCut("ZL2FJHighMETPresel_noB");
+        ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHighMET_noB%s", regions[ireg].Data()), abcdef_2fj[ireg], abcdef_wgt_2fj[ireg]);
+
+
     }
 
     //===============================================================================================================================================================
@@ -683,10 +714,10 @@ int main(int argc, char** argv)
             ana.cutflow.addCutToLastActiveCut(TString::Format("ZL3FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
             ana.cutflow.getCut("ZL2FJA");
             ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
-            ana.cutflow.getCut("ZL2FJLMETA");
-            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
-            ana.cutflow.getCut("ZL2FJHMETA");
-            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+            ana.cutflow.getCut("ZL2FJLowMETA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJLowMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
+            ana.cutflow.getCut("ZL2FJHighMETA");
+            ana.cutflow.addCutToLastActiveCut(TString::Format("ZL2FJHighMETAEFTIDX%d", ieft), UNITY, [&, is_eft, ieft, ana]() { if (is_eft) return LHEReweightingWeight()[ieft] / LHEReweightingWeight()[ana.eft_idx]; else return 1.f; });
         }
     }
 
@@ -797,14 +828,17 @@ int main(int argc, char** argv)
     ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJPresel");
     ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJPresel");
     ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJLMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJLMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJLMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJLMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJHMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJHMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJHMETPresel");
-    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJHMETPresel");
+    
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJLowMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJLowMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJLowMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJLowMETPresel");
+
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL2FJHighMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ1, "ZL2FJHighMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_event, "ZL2FJHighMETPresel");
+    ana.cutflow.bookHistogramsForCutAndBelow(histograms_2FJ_SR, "ZL2FJHighMETPresel");
+
     ana.cutflow.bookHistogramsForCut(histograms_2FJ_Cutflow, "ZL2FJ");
 
     ana.cutflow.bookHistogramsForCutAndBelow(histograms_FJ0, "ZL3FJPresel");
